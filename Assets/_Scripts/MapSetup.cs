@@ -1,7 +1,9 @@
 
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
+using UnityEngine.UI;
 
 
 namespace GGJ18
@@ -19,6 +21,8 @@ namespace GGJ18
 
 		public float onWireProb = 0.3f;
 
+		public Text counterLabel;
+
 
 		public int MINIMAL_WIRES = 2;
 
@@ -26,6 +30,23 @@ namespace GGJ18
 
 		private Node[,] _tiles;
 		private List<Wire> _wires;
+
+
+		private int _stepCounter = 0;
+
+		/////////////////////////////////////////////////////////////////////////////////////
+
+		public int TotalOnWires
+		{
+			get {
+				int count = 0;
+				foreach (var wire in _wires) {
+					count += wire.isOn ? 1 : 0;
+				}
+
+				return count;
+			}
+		}
 
 		/////////////////////////////////////////////////////////////////////////////////////
 
@@ -62,8 +83,8 @@ namespace GGJ18
 
 			for (int row = 0; row < rows; row++) {
 				for (int wireIdx = 0; wireIdx < columns - 1; wireIdx++) {
-//					bool wired = Random.Range(0, 10) % 2 == 0;
-					bool wired = true;
+					bool wired = Random.value <= 0.8f;
+					//bool wired = true;
 					if (wired) {
 						var wireObj = Instantiate(wirePrefab, hostTr);
 
@@ -79,8 +100,8 @@ namespace GGJ18
 
 			for (int column = 0; column < columns; column++) {
 				for (int wireIdx = 0; wireIdx < columns - 1; wireIdx++) {
-					//bool wired = Random.Range(0, 10) % 2 == 0;
-					bool wired = true;
+					bool wired = Random.value <= 0.8f;
+					//bool wired = true;
 					if (wired) {
 						var wireObj = Instantiate(wirePrefab, hostTr);
 
@@ -120,12 +141,12 @@ namespace GGJ18
 				for (int column = 0; column < columns; column++) {
 					var tile = _tiles[row, column];
 					tile.toggle(tile.wireCount >= MINIMAL_WIRES);
-					/**
-					Debug.LogFormat("[{0}, {1}] has {2} on wires=> {3}", row, column, tile.wireCount,
-							tile.isOn);
-					**/
 				}
 			}
+
+
+			_stepCounter++;
+			counterLabel.text = _stepCounter.ToString();
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////

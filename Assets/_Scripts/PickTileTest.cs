@@ -12,6 +12,8 @@ namespace GGJ18
 
 		public LayerMask targetLayers;
 
+		public int maxWires = 10;
+
 		/////////////////////////////////////////////////////////////////////////////////////
 
 		private void Update()
@@ -26,11 +28,16 @@ namespace GGJ18
 					if (otherRb != null) {
 						var wire = otherRb.gameObject.GetComponent<Wire>();
 //						bool canToggle = wire.a.isOn || wire.b.isOn;
-						bool canToggle = true;
-						if (canToggle) {
+						if (wire.isOn) {
 							wire.toggle();
-
 							map.updateLightings();
+						} else {
+							bool canToggle = map.TotalOnWires < maxWires;
+							if (canToggle) {
+								wire.toggle();
+
+								map.updateLightings();
+							}
 						}
 					}
 				}
